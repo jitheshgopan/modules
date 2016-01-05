@@ -36,8 +36,7 @@ class Modules implements RepositoryInterface
 	public function register()
 	{
 		$modules = $this->repository->enabled();
-
-		$modules->each(function($properties, $slug) {
+		$modules->each(function($properties) {
 			$this->registerServiceProvider($properties);
 
 			$this->autoloadFiles($properties);
@@ -66,7 +65,7 @@ class Modules implements RepositoryInterface
 	 * @param array  $properties
 	 * @return void
 	 */
-	protected function autoloadFiles($properties)
+	public function autoloadFiles($properties)
 	{
 		if (isset($properties['autoload'])) {
 			$namespace = $this->resolveNamespace($properties);
@@ -342,4 +341,9 @@ class Modules implements RepositoryInterface
 			: studly_case($properties['slug'])
 		);
 	}
+
+    public function getRepository()
+    {
+        return $this->repository;
+    }
 }
