@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Config\Repository as Config;
 
 class MakeModuleCommand extends Command
 {
@@ -53,8 +54,7 @@ class MakeModuleCommand extends Command
 		'Database/Seeds/{{namespace}}DatabaseSeeder.php',
 		'Http/routes.php',
 		'Providers/{{namespace}}ServiceProvider.php',
-		'Providers/RouteServiceProvider.php',
-		'module.json'
+		'Providers/RouteServiceProvider.php'
 	];
 
 	/**
@@ -92,17 +92,26 @@ class MakeModuleCommand extends Command
     protected $container;
 
     /**
+     * @var \Illuminate\Config\Repository
+     */
+    protected $config;
+
+    /**
      * Create a new command instance.
      *
      * @param Filesystem  $files
      * @param Modules  $module
      */
-    public function __construct(Filesystem $files, Modules $module)
+    public function __construct(Filesystem $files, Modules $module, Config $config)
     {
         parent::__construct();
 
         $this->files  = $files;
         $this->module = $module;
+        $this->config = $config;
+
+        //Add manifest file to moduleFiles
+        $this->moduleFiles[] = $this->config->get('modules.manifestFileName');
     }
 
     /**

@@ -35,6 +35,17 @@ return [
 
 	'namespace' => 'App\Modules\\',
 
+    /*
+	|--------------------------------------------------------------------------
+	| Manifest file name of modules
+	|--------------------------------------------------------------------------
+	|
+	| Define the Manifest file name for your modules.
+	|
+	*/
+
+    'manifestFileName' => 'module.json',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Default Module Driver
