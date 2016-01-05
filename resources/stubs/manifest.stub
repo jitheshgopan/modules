@@ -4,5 +4,9 @@
 	"namespace": "{{namespace}}",
 	"version": "{{version}}",
 	"description": "{{description}}",
-	"enabled": true
+	"enabled": false,
+	"url": "",
+	"supports": ">0.0.0",
+	"author": "{{author}}",
+	"image" : ""
 }
