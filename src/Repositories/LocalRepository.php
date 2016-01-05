@@ -2,6 +2,7 @@
 namespace Caffeinated\Modules\Repositories;
 
 use Caffeinated\Modules\Repositories\Repository;
+use Illuminate\Support\Collection;
 
 class LocalRepository extends Repository
 {
@@ -15,7 +16,7 @@ class LocalRepository extends Repository
 		$basenames = $this->getAllBasenames();
 		$modules   = collect();
 
-		$basenames->each(function($module, $key) use ($modules) {
+		$basenames->each(function($module) use ($modules) {
 			$modules->put($module, $this->getProperties($module));
 		});
 
@@ -31,7 +32,7 @@ class LocalRepository extends Repository
 	{
 		$slugs = collect();
 
-		$this->all()->each(function($item, $key) use ($slugs) {
+		$this->all()->each(function($item) use ($slugs) {
 			$slugs->push($item['slug']);
 		});
 
@@ -263,7 +264,8 @@ class LocalRepository extends Repository
         }
 
         $keys    = $collection->keys()->toArray();
-        $merged  = $collection->merge($cache)->only($keys);
+        $merged  = $collection->merge($cache);
+        $merged = new Collection(array_intersect_key($merged->all(), array_flip((array) $keys)));
         $content = json_encode($merged->all(), JSON_PRETTY_PRINT);
 
         return $this->files->put($cacheFile, $content);

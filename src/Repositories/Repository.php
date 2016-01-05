@@ -100,7 +100,7 @@ abstract class Repository implements RepositoryInterface
      */
     protected function getManifestPath($slug)
     {
-        return $this->getModulePath($slug).'module.json';
+        return $this->getModulePath($slug) . $this->config->get('modules.manifestFileName');
     }
 
     /**
