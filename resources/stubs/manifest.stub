@@ -8,5 +8,6 @@
 	"url": "",
 	"supports": ">0.0.0",
 	"author": "{{author}}",
-	"image" : ""
+	"image" : "",
+	"autoload: []
 }
