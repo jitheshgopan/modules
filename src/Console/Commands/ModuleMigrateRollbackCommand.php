@@ -55,7 +55,7 @@ class ModuleMigrateRollbackCommand extends Command
 		$slug = $this->argument('slug');
 
 		if ($slug) {
-			return $this->rollback($Slug);
+			return $this->rollback($slug);
 		} else {
 			foreach ($this->module->all() as $module) {
 				$this->rollback($module['slug']);
