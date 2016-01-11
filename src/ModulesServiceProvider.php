@@ -22,6 +22,7 @@ class ModulesServiceProvider extends ServiceProvider
 		], 'config');
 
 		$this->app['modules']->register();
+        \Event::fire('caffeinated:modules:loaded');
 	}
 
 	/**
