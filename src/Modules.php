@@ -347,6 +347,12 @@ class Modules implements RepositoryInterface
         return $this->repository;
     }
 
+    public function getModuleRelativeFilePath($properties, $relativePath){
+        $namespace = $this->resolveNamespace($properties);
+        $path      = "/{$namespace}/";
+        return $path.$relativePath;
+    }
+
     public function getModuleFilePath($properties, $relativePath){
         $namespace = $this->resolveNamespace($properties);
         $path      = $this->repository->getPath()."/{$namespace}/";
