@@ -9,5 +9,6 @@
 	"supports": ">0.0.0",
 	"author": "{{author}}",
 	"image" : "",
-	"autoload": []
+	"autoload": [],
+	"links": []
 }
