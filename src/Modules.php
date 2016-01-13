@@ -6,294 +6,294 @@ use Illuminate\Foundation\Application;
 
 class Modules implements RepositoryInterface
 {
-	/**
-	 * @var Application
-	 */
-	protected $app;
+    /**
+     * @var Application
+     */
+    protected $app;
 
-	/**
-	 * @var RepositoryInterface
-	 */
-	protected $repository;
+    /**
+     * @var RepositoryInterface
+     */
+    protected $repository;
 
-	/**
-	 * Create a new Modules instance.
-	 *
-	 * @param Application  $app
-	 * @param RepositoryInterface  $repository
-	 */
-	public function __construct(Application $app, RepositoryInterface $repository)
-	{
-		$this->app        = $app;
-		$this->repository = $repository;
-	}
+    /**
+     * Create a new Modules instance.
+     *
+     * @param Application  $app
+     * @param RepositoryInterface  $repository
+     */
+    public function __construct(Application $app, RepositoryInterface $repository)
+    {
+        $this->app        = $app;
+        $this->repository = $repository;
+    }
 
-	/**
-	 * Register the module service provider file from all modules.
-	 *
-	 * @return mixed
-	 */
-	public function register()
-	{
-		$modules = $this->repository->enabled();
-		$modules->each(function($properties) {
-			$this->registerServiceProvider($properties);
+    /**
+     * Register the module service provider file from all modules.
+     *
+     * @return mixed
+     */
+    public function register()
+    {
+        $modules = $this->repository->enabled();
+        $modules->each(function($properties) {
+            $this->registerServiceProvider($properties);
 
-			$this->autoloadFiles($properties);
-		});
-	}
+            $this->autoloadFiles($properties);
+        });
+    }
 
-	/**
-	 * Register the module service provider.
-	 *
-	 * @param  string $properties
-	 * @return string
-	 * @throws \Caffeinated\Modules\Exception\FileMissingException
-	 */
-	protected function registerServiceProvider($properties)
-	{
-		$namespace       = $this->resolveNamespace($properties);
-		$file            = $this->repository->getPath()."/{$namespace}/Providers/{$namespace}ServiceProvider.php";
-		$serviceProvider = $this->repository->getNamespace()."\\".$namespace."\\Providers\\{$namespace}ServiceProvider";
+    /**
+     * Register the module service provider.
+     *
+     * @param  string $properties
+     * @return string
+     * @throws \Caffeinated\Modules\Exception\FileMissingException
+     */
+    protected function registerServiceProvider($properties)
+    {
+        $namespace       = $this->resolveNamespace($properties);
+        $file            = $this->getModulePath($properties->get('slug')) . "/Providers/{$namespace}ServiceProvider.php";
+        $serviceProvider = $this->repository->getNamespace()."\\".$namespace."\\Providers\\{$namespace}ServiceProvider";
 
-		$this->app->register($serviceProvider);
-	}
+        $this->app->register($serviceProvider);
+    }
 
-	/**
-	 * Autoload custom module files.
-	 *
-	 * @param array  $properties
-	 * @return void
-	 */
-	public function autoloadFiles($properties)
-	{
-		if (isset($properties['autoload'])) {
-			$namespace = $this->resolveNamespace($properties);
-			$path      = $this->repository->getPath()."/{$namespace}/";
+    /**
+     * Autoload custom module files.
+     *
+     * @param array  $properties
+     * @return void
+     */
+    public function autoloadFiles($properties)
+    {
+        if (isset($properties['autoload'])) {
+            $namespace = $this->resolveNamespace($properties);
+            $path      = $this->getModulePath($properties->get('slug'));
 
-			foreach ($properties['autoload'] as $file) {
-				include($path.$file);
-			}
-		}
-	}
+            foreach ($properties['autoload'] as $file) {
+                include($path.$file);
+            }
+        }
+    }
 
-	/**
-	 * Get all modules.
-	 *
-	 * @return Collection
-	 */
-	public function all()
-	{
-		return $this->repository->all();
-	}
+    /**
+     * Get all modules.
+     *
+     * @return Collection
+     */
+    public function all()
+    {
+        return $this->repository->all();
+    }
 
-	/**
-	 * Get all module slugs.
-	 *
-	 * @return array
-	 */
-	public function slugs()
-	{
-		return $this->repository->slugs();
-	}
+    /**
+     * Get all module slugs.
+     *
+     * @return array
+     */
+    public function slugs()
+    {
+        return $this->repository->slugs();
+    }
 
-	/**
-	 * Get modules based on where clause.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return Collection
-	 */
-	public function where($key, $value)
-	{
-		return $this->repository->where($key, $value);
-	}
+    /**
+     * Get modules based on where clause.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return Collection
+     */
+    public function where($key, $value)
+    {
+        return $this->repository->where($key, $value);
+    }
 
-	/**
-	 * Sort modules by given key in ascending order.
-	 *
-	 * @param  string  $key
-	 * @return Collection
-	 */
-	public function sortBy($key)
-	{
-		return $this->repository->sortBy($key);
-	}
+    /**
+     * Sort modules by given key in ascending order.
+     *
+     * @param  string  $key
+     * @return Collection
+     */
+    public function sortBy($key)
+    {
+        return $this->repository->sortBy($key);
+    }
 
-	/**
-	 * Sort modules by given key in ascending order.
-	 *
-	 * @param  string  $key
-	 * @return Collection
-	 */
-	public function sortByDesc($key)
-	{
-		return $this->repository->sortByDesc($key);
-	}
+    /**
+     * Sort modules by given key in ascending order.
+     *
+     * @param  string  $key
+     * @return Collection
+     */
+    public function sortByDesc($key)
+    {
+        return $this->repository->sortByDesc($key);
+    }
 
-	/**
-	 * Check if the given module exists.
-	 *
-	 * @param  string  $slug
-	 * @return bool
-	 */
-	public function exists($slug)
-	{
-		return $this->repository->exists($slug);
-	}
+    /**
+     * Check if the given module exists.
+     *
+     * @param  string  $slug
+     * @return bool
+     */
+    public function exists($slug)
+    {
+        return $this->repository->exists($slug);
+    }
 
-	/**
-	 * Returns count of all modules.
-	 *
-	 * @return int
-	 */
-	public function count()
-	{
-		return $this->repository->count();
-	}
+    /**
+     * Returns count of all modules.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->repository->count();
+    }
 
-	/**
-	 * Get modules path.
-	 *
-	 * @return string
-	 */
-	public function getPath()
-	{
-		return $this->repository->getPath();
-	}
+    /**
+     * Get modules path.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->repository->getPath();
+    }
 
-	/**
-	 * Set modules path in "RunTime" mode.
-	 *
-	 * @param  string $path
-	 * @return object $this
-	 */
-	public function setPath($path)
-	{
-		return $this->repository->setPath($path);
-	}
+    /**
+     * Set modules path in "RunTime" mode.
+     *
+     * @param  string $path
+     * @return object $this
+     */
+    public function setPath($path)
+    {
+        return $this->repository->setPath($path);
+    }
 
-	/**
-	* Get path for the specified module.
-	*
-	* @param  string $slug
-	* @return string
-	*/
-	public function getModulePath($slug)
-	{
-		return $this->repository->getModulePath($slug);
-	}
+    /**
+     * Get path for the specified module.
+     *
+     * @param  string $slug
+     * @return string
+     */
+    public function getModulePath($slug)
+    {
+        return $this->repository->getModulePath($slug);
+    }
 
-	/**
-	* Get modules namespace.
-	*
-	* @return string
-	*/
-	public function getNamespace()
-	{
-		return $this->repository->getNamespace();
-	}
+    /**
+     * Get modules namespace.
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->repository->getNamespace();
+    }
 
-	/**
-	 * Get a module's properties.
-	 *
-	 * @param  string $slug
-	 * @return mixed
-	 */
-	public function getProperties($slug)
-	{
-		return $this->repository->getProperties($slug);
-	}
+    /**
+     * Get a module's properties.
+     *
+     * @param  string $slug
+     * @return mixed
+     */
+    public function getProperties($slug)
+    {
+        return $this->repository->getProperties($slug);
+    }
 
-	/**
-	 * Get a module property value.
-	 *
-	 * @param  string $property
-	 * @param  mixed  $default
-	 * @return mixed
-	 */
-	public function getProperty($property, $default = null)
-	{
-		return $this->repository->getProperty($property, $default);
-	}
+    /**
+     * Get a module property value.
+     *
+     * @param  string $property
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function getProperty($property, $default = null)
+    {
+        return $this->repository->getProperty($property, $default);
+    }
 
-	/**
-	 * Set a module property value.
-	 *
-	 * @param  string $property
-	 * @param  mixed  $value
-	 * @return bool
-	 */
-	public function setProperty($property, $value)
-	{
-		return $this->repository->setProperty($property, $value);
-	}
+    /**
+     * Set a module property value.
+     *
+     * @param  string $property
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function setProperty($property, $value)
+    {
+        return $this->repository->setProperty($property, $value);
+    }
 
-	/**
-	 * Gets all enabled modules.
-	 *
-	 * @return array
-	 */
-	public function enabled()
-	{
-		return $this->repository->enabled();
-	}
+    /**
+     * Gets all enabled modules.
+     *
+     * @return array
+     */
+    public function enabled()
+    {
+        return $this->repository->enabled();
+    }
 
-	/**
-	 * Gets all disabled modules.
-	 *
-	 * @return array
-	 */
-	public function disabled()
-	{
-		return $this->repository->disabled();
-	}
+    /**
+     * Gets all disabled modules.
+     *
+     * @return array
+     */
+    public function disabled()
+    {
+        return $this->repository->disabled();
+    }
 
-	/**
-	 * Check if specified module is enabled.
-	 *
-	 * @param  string $slug
-	 * @return bool
-	 */
-	public function isEnabled($slug)
-	{
-		return $this->repository->isEnabled($slug);
-	}
+    /**
+     * Check if specified module is enabled.
+     *
+     * @param  string $slug
+     * @return bool
+     */
+    public function isEnabled($slug)
+    {
+        return $this->repository->isEnabled($slug);
+    }
 
-	/**
-	 * Check if specified module is disabled.
-	 *
-	 * @param  string $slug
-	 * @return bool
-	 */
-	public function isDisabled($slug)
-	{
-		return $this->repository->isDisabled($slug);
-	}
+    /**
+     * Check if specified module is disabled.
+     *
+     * @param  string $slug
+     * @return bool
+     */
+    public function isDisabled($slug)
+    {
+        return $this->repository->isDisabled($slug);
+    }
 
-	/**
-	 * Enables the specified module.
-	 *
-	 * @param  string $slug
-	 * @return bool
-	 */
-	public function enable($slug)
-	{
-		return $this->repository->enable($slug);
-	}
+    /**
+     * Enables the specified module.
+     *
+     * @param  string $slug
+     * @return bool
+     */
+    public function enable($slug)
+    {
+        return $this->repository->enable($slug);
+    }
 
-	/**
-	 * Disables the specified module.
-	 *
-	 * @param  string $slug
-	 * @return bool
-	 */
-	public function disable($slug)
-	{
-		return $this->repository->disable($slug);
-	}
+    /**
+     * Disables the specified module.
+     *
+     * @param  string $slug
+     * @return bool
+     */
+    public function disable($slug)
+    {
+        return $this->repository->disable($slug);
+    }
 
-	/**
+    /**
      * Refresh the cache with any newly found modules.
      *
      * @return bool
@@ -303,7 +303,7 @@ class Modules implements RepositoryInterface
         return $this->repository->cache();
     }
 
-	/**
+    /**
      * Get the contents of the cache file.
      *
      * The cache file lists all module slugs and their
@@ -313,11 +313,11 @@ class Modules implements RepositoryInterface
      * @return Collection
      */
     public function getCache()
-	{
-		return $this->repository->getCache();
-	}
+    {
+        return $this->repository->getCache();
+    }
 
-	/**
+    /**
      * Set the given cache key value.
      *
      * @param  string  $key
@@ -325,22 +325,22 @@ class Modules implements RepositoryInterface
      * @return int
      */
     public function setCache($key, $value)
-	{
-		return $this->repository->setCache($key, $value);
-	}
+    {
+        return $this->repository->setCache($key, $value);
+    }
 
-	/**
-	 * Resolve the correct module namespace.
-	 *
-	 * @param array  $properties
-	 */
-	private function resolveNamespace($properties)
-	{
-		return (isset($properties['namespace'])
-			? $properties['namespace']
-			: studly_case($properties['slug'])
-		);
-	}
+    /**
+     * Resolve the correct module namespace.
+     *
+     * @param array  $properties
+     */
+    private function resolveNamespace($properties)
+    {
+        return (isset($properties['namespace'])
+            ? $properties['namespace']
+            : studly_case($properties['slug'])
+        );
+    }
 
     public function getRepository()
     {
@@ -355,7 +355,7 @@ class Modules implements RepositoryInterface
 
     public function getModuleFilePath($properties, $relativePath){
         $namespace = $this->resolveNamespace($properties);
-        $path      = $this->repository->getPath()."/{$namespace}/";
+        $path      = $this->getModulePath($properties->get('slug'));
         return $path.$relativePath;
     }
 
