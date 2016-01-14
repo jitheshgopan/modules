@@ -54,7 +54,8 @@ class MakeModuleCommand extends Command
 		'Database/Seeds/{{namespace}}DatabaseSeeder.php',
 		'Http/routes.php',
 		'Providers/{{namespace}}ServiceProvider.php',
-		'Providers/RouteServiceProvider.php'
+		'Providers/RouteServiceProvider.php',
+        'composer.json'
 	];
 
 	/**
@@ -67,6 +68,7 @@ class MakeModuleCommand extends Command
 		'routes.stub',
 		'moduleserviceprovider.stub',
 		'routeserviceprovider.stub',
+        'composer.stub',
 		'manifest.stub'
 	];
 
@@ -306,9 +308,11 @@ class MakeModuleCommand extends Command
 	 */
 	protected function formatContent($content)
 	{
+        $absoulteNamespace = $this->module->getNamespace() . '\\' . $this->container['namespace'];
+        $psr4NamespaceKey = str_replace('\\', '\\\\', $absoulteNamespace) . '\\\\';
 		return str_replace(
-			['{{slug}}', '{{name}}', '{{namespace}}', '{{version}}', '{{description}}', '{{author}}', '{{path}}'],
-			[$this->container['slug'], $this->container['name'], $this->container['namespace'], $this->container['version'], $this->container['description'], $this->container['author'], $this->module->getNamespace()],
+			['{{slug}}', '{{name}}', '{{namespace}}', '{{version}}', '{{description}}', '{{author}}', '{{path}}', '{{psr4NamespaceKey}}'],
+			[$this->container['slug'], $this->container['name'], $this->container['namespace'], $this->container['version'], $this->container['description'], $this->container['author'], $this->module->getNamespace(), $psr4NamespaceKey],
 			$content
 		);
 	}

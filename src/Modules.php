@@ -37,9 +37,8 @@ class Modules implements RepositoryInterface
     {
         $modules = $this->repository->enabled();
         $modules->each(function($properties) {
-            $this->registerServiceProvider($properties);
-
             $this->autoloadFiles($properties);
+            $this->registerServiceProvider($properties);
         });
     }
 

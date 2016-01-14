@@ -9,6 +9,5 @@
 	"supports": ">0.0.0",
 	"author": "{{author}}",
 	"image" : "",
-	"autoload": [],
-	"links": []
+	"autoload": ["vendor/autoload.php"]
 }
