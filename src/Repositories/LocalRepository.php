@@ -280,7 +280,7 @@ class LocalRepository extends Repository
      *
      * @return Collection
      */
-    public function getCache()
+    public function  getCache()
     {
         $cacheFile = storage_path('app/modules.json');
 
